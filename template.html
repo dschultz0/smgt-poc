@@ -6,14 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>A9 Search Improvement Reporting Tool</title>
-    <link href="https://s3.us-west-2.amazonaws.com/taskassembly.com/a9/bootstrap.css" rel="stylesheet">
-    <link href="https://s3.us-west-2.amazonaws.com/taskassembly.com/a9/bootstrap-theme.css" rel="stylesheet">
-    <link rel="stylesheet" media="screen"
-          href="A9%20Search%20Improvement%20Reporting%20Tool_files/application_without_nav-e3b0c44298fc1c149afbf4c8996fb92427ae.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
     <style>
-        body {
-            padding-top: 70px;
-        }
 
         .delete-btn {
             padding: 0px;
@@ -34,9 +29,8 @@
     <meta name="csrf-param" content="authenticity_token">
     <meta name="csrf-token"
           content="GboNlW+3HyPjhai2KD6hexJJHHcK/fg0+ipTfzBbdeBhQmjt8tpF4T8HKgw7IIRVvk8+mDNohp3OQJ/wKOS+1A==">
-    <script src="A9%20Search%20Improvement%20Reporting%20Tool_files/application_without_nav-336427d6d60d4e44dab2f153227a3ee63ccf7.js"></script>
-    <script src="https://s3.us-west-2.amazonaws.com/taskassembly.com/a9/patchingutil.js"
-            id="patching-util-aea-browser-extension"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd" crossorigin="anonymous"></script>
     <script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
 </head>
 
@@ -86,7 +80,7 @@
                     {% for asin in task.input.asins %}
                     <div class="col-sm-6 col-md-4">
                         <div id="asin-block" class="thumbnail asin-block" data-index="{{ forloop.index }}" data-asin="{{ asin.asin }}"
-                             data-selected="true">
+                             {% if forloop.first == true %}data-selected="true"{% endif %}>
                             <img src="{{ asin.image }}" width="175" height="200">
                             <div class="caption">
                                 <h4 style="margin-bottom:5px;">
@@ -133,6 +127,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
             </div>
             <div class="col-md-4">
@@ -292,7 +287,6 @@
 
                         <div class="panel panel-default">
                             <div class="panel-body" style="text-align:right">
-                                <a href="" class="btn btn-default">Cancel</a>
                                 <button type="submit" name="commit" value="save" class="btn btn-primary"
                                         disabled="disabled">Submit
                                 </button>
@@ -306,344 +300,272 @@
 
 
     <script type="text/javascript">
-        var alreadySaving = false;
-        var totalAsins = document.getElementsByClassName("asin-block").length
-        var asinsCompleted = 0;
-        var completedAsinsMap = {};
-        var auditMode = "" == 'audit' ? true : false;
+        $(function(){
 
-        var chars = 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z'.split(',');
+            var alreadySaving = false;
+            var totalAsins = $('div.asin-block').length;
+            var asinsCompleted = 0;
+            var completedAsinsMap = {};
+            var auditMode = "" == 'audit' ? true : false;
 
-        function getKeyCode(c) {
-            var index = chars.indexOf(c);
-            if (index != -1) {
-                return 65 + index;
-            }
-            return null;
-        }
+            var chars = 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z'.split(',');
 
-        function deduceShortcutKeys() {
-            var keys = [];
-            var fields = [{
-                "id": 646,
-                "judgment_form_id": 60,
-                "field_name": null,
-                "field_value": "exact",
-                "field_id": null,
-                "field_description": "This product satisfies the query",
-                "field_label": "Exact",
-                "field_type": null,
-                "created_at": "2018-06-29T00:10:57.000Z",
-                "updated_at": "2018-07-06T21:31:11.000Z",
-                "whole_page_judgments_form_id": null,
-                "whole_query_judgments_form_id": null,
-                "keyword_term_annotations_form_id": null,
-                "field_shortcut": "e"
-            }, {
-                "id": 647,
-                "judgment_form_id": 60,
-                "field_name": null,
-                "field_value": "substitute",
-                "field_id": null,
-                "field_description": "This product is of the same type, but differs by some non-crucial detail",
-                "field_label": "Substitute",
-                "field_type": null,
-                "created_at": "2018-06-29T00:10:57.000Z",
-                "updated_at": "2018-07-19T22:29:49.000Z",
-                "whole_page_judgments_form_id": null,
-                "whole_query_judgments_form_id": null,
-                "keyword_term_annotations_form_id": null,
-                "field_shortcut": "s"
-            }, {
-                "id": 648,
-                "judgment_form_id": 60,
-                "field_name": null,
-                "field_value": "complement",
-                "field_id": null,
-                "field_description": "An accessory, component, or frequently-bought-together",
-                "field_label": "Complement",
-                "field_type": null,
-                "created_at": "2018-06-29T00:10:57.000Z",
-                "updated_at": "2018-07-19T22:29:49.000Z",
-                "whole_page_judgments_form_id": null,
-                "whole_query_judgments_form_id": null,
-                "keyword_term_annotations_form_id": null,
-                "field_shortcut": "c"
-            }, {
-                "id": 649,
-                "judgment_form_id": 60,
-                "field_name": null,
-                "field_value": "irrelevant",
-                "field_id": null,
-                "field_description": "The customer would not reasonably be interested in this product",
-                "field_label": "Irrelevant",
-                "field_type": null,
-                "created_at": "2018-06-29T00:10:57.000Z",
-                "updated_at": "2018-07-06T21:31:11.000Z",
-                "whole_page_judgments_form_id": null,
-                "whole_query_judgments_form_id": null,
-                "keyword_term_annotations_form_id": null,
-                "field_shortcut": "i"
-            }, {
-                "id": 650,
-                "judgment_form_id": 60,
-                "field_name": null,
-                "field_value": "other",
-                "field_id": null,
-                "field_description": "The query is very unclear or the product is missing information necessary to judge",
-                "field_label": "Unjudgable",
-                "field_type": null,
-                "created_at": "2018-06-29T00:10:57.000Z",
-                "updated_at": "2020-05-08T07:17:44.000Z",
-                "whole_page_judgments_form_id": null,
-                "whole_query_judgments_form_id": null,
-                "keyword_term_annotations_form_id": null,
-                "field_shortcut": "u"
-            }];
-            for (var i = 0, len = fields.length; i < len; i++) {
-                if (fields[i]['field_shortcut'] != null) {
-                    keys.push(fields[i]['field_shortcut']);
-                } else {
-                    keys.push(fields[i]['field_value'].split('_').pop()[0]);
+            function getKeyCode(c){
+                var index = chars.indexOf(c);
+                if(index != -1){
+                    return 65 + index;
                 }
-            }
-            return keys;
-        }
-
-        var allowedKeys = (function () {
-            var allowed = deduceShortcutKeys();
-            var keyMap = {};
-            var keyCode = null;
-            for (var i = 0, len = allowed.length; i < len; i++) {
-                keyCode = getKeyCode(allowed[i]);
-                if (keyCode) {
-                    keyMap[keyCode] = allowed[i];
-                }
-            }
-            return keyMap;
-        })();
-
-        var delay = (function () {
-            var timer = 0;
-            return function (callback, ms) {
-                clearTimeout(timer);
-                timer = setTimeout(callback, ms);
-            };
-        })();
-
-        function handlePageSave(e) {
-            e.preventDefault();
-            $('form').submit();
-        }
-
-        function _scrollToEle(el) {
-            var container = $('#asins-section');
-            var elTop = el.parent().position().top;
-            var scrollPos = container.scrollTop();
-            var winHeight = container.height();
-            if (elTop < scrollPos) {
-                container.scrollTop(elTop - 50);
-            } else if ((elTop + el.height()) > scrollPos) {
-                container.scrollTop(elTop);
-            }
-        }
-
-        // returns the 1-indexed currently selected task, or index 1 if there's no selection
-        function getSelectedItemIndex() {
-            var selectedTask = $('div[data-selected]');
-            return selectedTask.length > 0 ? parseInt(selectedTask.data('index'), 10) : 1;
-        }
-
-        function selectItemByIndex(index) {
-            $('div[data-selected]').removeAttr('data-selected'); // deselect the old task
-
-            // figure out which element to select
-            index = (index - 1) % totalAsins; // convert to zero-indexed
-            if (index < 0) index += totalAsins;
-            index += 1; // convert back to one-indexed
-
-            // select the new task
-            var newSelection = $('div[data-index=' + index + ']');
-            newSelection.attr('data-selected', 'true');
-            _scrollToEle(newSelection);
-        }
-
-        function handleSpace() {
-            var target = $('div[data-selected] h4 a').attr('href');
-            window.open(target, '_blank');
-        }
-
-        function handleTabKey(moveBackward) {
-            var newIndex = getSelectedItemIndex() + (moveBackward ? -1 : 1);
-            selectItemByIndex(newIndex);
-        }
-
-        function handleMovementY(moveBackward) {
-            var index = getSelectedItemIndex() - 1; // zero-indexed task
-
-            // compute the number of columns being displayed
-            var columnCount = 0;
-            var items = $('div.asin-block');
-            var firstTopOffset = items.first().offset().top;
-            items.each(function (i, element) {
-                var topOffset = $(element).offset().top;
-                if (topOffset === firstTopOffset) columnCount++;
-            });
-
-            // number of items, rounded up to nearest full row
-            var fullSelectableCount = totalAsins + columnCount - (totalAsins % columnCount);
-
-            // new index of the item after applying the movement, if we assumed that all the rows are filled with items
-            var newIndex = (index + (moveBackward ? -columnCount : columnCount) + fullSelectableCount) % fullSelectableCount;
-
-            // correct the index if the last row is not filled with items
-            if (newIndex >= totalAsins) {
-                if (moveBackward) { // moving up when on the first row and there's no corresponding item in the last row, move to the second to last row
-                    newIndex -= columnCount;
-                } else { // moving down when there's no corresponding item below, move to the first row
-                    newIndex = newIndex % columnCount;
-                }
+                return null;
             }
 
-            selectItemByIndex(newIndex + 1);
-        }
-
-        function handleOtherKeys(e) {
-            e.preventDefault();
-            var key = allowedKeys[e.which]
-            handleLabelChange(key);
-        }
-
-        function handleLabelChange(key) {
-            // don't handle label change if form has already been submitted
-            if (key != null && !alreadySaving) {
-                var check = $('div.thumbnail[data-selected] input[data-shortcut-key=' + key + ']');
-                check.prop('checked', !check.prop('checked'));
-                var form_type = "one_of_many";
-                if (form_type != 'many_of_many') {
-                    var checks = $('div.thumbnail[data-selected] input[type=checkbox]').filter(function () {
-                        return $(this).attr('data-shortcut-key') != key;
-                    });
-                    checks.prop('checked', false);
-                }
-                updateCheckLabels(check);
-                updateProgress(check);
-
-                // move to the next item after the judgement is made
-                handleTabKey(false);
-            }
-        }
-
-        document.onkeydown = function (e) {
-            console.log(e)
-            if (!alreadySaving && (e.ctrlKey || e.metaKey) && e.which === 83) {
-                if (asinsCompleted === totalAsins) {
-                    handlePageSave(e);
-                    alreadySaving = true;
-                } else {
-                    e.preventDefault();
-                }
-            } else if (e.which !== 9 && e.target.tagName.toLowerCase() === 'textarea') {
-                return true;
-            }
-
-            if (e.which === 32) { // space key
-                handleSpace();
-            } else if (e.which === 37) { // left arrow key
-                handleTabKey(true);
-            } else if (e.which === 39) { // right arrow key
-                handleTabKey(false);
-            } else if (e.which === 38) { // up arrow key
-                handleMovementY(true);
-            } else if (e.which === 40) { // down arrow key
-                handleMovementY(false);
-            } else if (e.which === 9) { // tab key
-                e.preventDefault();
-                handleTabKey(e.shiftKey);
-                return false;
-            } else if (allowedKeys[e.which] != null) { // alphabet key
-                handleOtherKeys(e);
-            } else {
-                return true; // ignore all other keys
-            }
-        }
-
-        function updateCheckLabels(checkbox) {
-            var checks = checkbox.closest('div.thumbnail').find('input[type=checkbox]');
-            var container = checkbox.closest('div.thumbnail').find('div.labels ul');
-            container.html('');
-            var content = [];
-            checks.each(function () {
-                if (this.checked) {
-                    if (auditMode) {
-                        content.push('<li>');
-                        content.push('<span class="label label-info">' + $(this).parent().text() + '</span>');
-                        if ($(this).data('user-list') != null) {
-                            var userList = $(this).data('user-list').split(',');
-                            for (var i = 0, len = userList.length; i < len; i++) {
-                                content.push('&nbsp;<span class="label label-primary">' + userList[i] + '</span>');
-                            }
-                        }
-                        content.push('</li>');
+            function deduceShortcutKeys(){
+                var keys = [];
+                var fields = [{"id":646,"judgment_form_id":60,"field_name":null,"field_value":"exact","field_id":null,"field_description":"This product satisfies the query","field_label":"Exact","field_type":null,"created_at":"2018-06-29T00:10:57.000Z","updated_at":"2018-07-06T21:31:11.000Z","whole_page_judgments_form_id":null,"whole_query_judgments_form_id":null,"keyword_term_annotations_form_id":null,"field_shortcut":"e"},{"id":647,"judgment_form_id":60,"field_name":null,"field_value":"substitute","field_id":null,"field_description":"This product is of the same type, but differs by some non-crucial detail","field_label":"Substitute","field_type":null,"created_at":"2018-06-29T00:10:57.000Z","updated_at":"2018-07-19T22:29:49.000Z","whole_page_judgments_form_id":null,"whole_query_judgments_form_id":null,"keyword_term_annotations_form_id":null,"field_shortcut":"s"},{"id":648,"judgment_form_id":60,"field_name":null,"field_value":"complement","field_id":null,"field_description":"An accessory, component, or frequently-bought-together","field_label":"Complement","field_type":null,"created_at":"2018-06-29T00:10:57.000Z","updated_at":"2018-07-19T22:29:49.000Z","whole_page_judgments_form_id":null,"whole_query_judgments_form_id":null,"keyword_term_annotations_form_id":null,"field_shortcut":"c"},{"id":649,"judgment_form_id":60,"field_name":null,"field_value":"irrelevant","field_id":null,"field_description":"The customer would not reasonably be interested in this product","field_label":"Irrelevant","field_type":null,"created_at":"2018-06-29T00:10:57.000Z","updated_at":"2018-07-06T21:31:11.000Z","whole_page_judgments_form_id":null,"whole_query_judgments_form_id":null,"keyword_term_annotations_form_id":null,"field_shortcut":"i"},{"id":650,"judgment_form_id":60,"field_name":null,"field_value":"other","field_id":null,"field_description":"The query is very unclear or the product is missing information necessary to judge","field_label":"Unjudgable","field_type":null,"created_at":"2018-06-29T00:10:57.000Z","updated_at":"2020-05-08T07:17:44.000Z","whole_page_judgments_form_id":null,"whole_query_judgments_form_id":null,"keyword_term_annotations_form_id":null,"field_shortcut":"u"}];
+                for(var i = 0, len = fields.length; i < len; i++){
+                    if(fields[i]['field_shortcut'] != null){
+                        keys.push(fields[i]['field_shortcut']);
                     } else {
-                        content.push('<li><span class="label label-info">' + $(this).parent().text() + '</span></li>');
+                        keys.push(fields[i]['field_value'].split('_').pop()[0]);
                     }
                 }
-            });
-            container.html(content.join(''));
-        }
+                return keys;
+            }
 
-        function updateProgress(checkbox) {
-            computeCompletedAsins();
-            updateProgressUI();
-            updateSubmitState();
-        }
+            var allowedKeys = (function(){
+                var allowed = deduceShortcutKeys();
+                var keyMap = {};
+                var keyCode = null;
+                for(var i = 0, len = allowed.length; i < len; i++){
+                    keyCode = getKeyCode(allowed[i]);
+                    if(keyCode){
+                        keyMap[keyCode] = allowed[i];
+                    }
+                }
+                return keyMap;
+            })();
 
-        $('div.thumbnail input[type=checkbox]').on('change', function (e) {
-            updateCheckLabels($(this));
-        });
+            var delay = (function(){
+                var timer = 0;
+                return function(callback, ms){
+                    clearTimeout (timer);
+                    timer = setTimeout(callback, ms);
+                };
+            })();
 
-        $('a[data-action=select-field]').click(function (e) {
-            e.preventDefault();
-            var key = $(this).data('field-shortcut');
-            handleLabelChange(key);
-        });
+            function handlePageSave(e){
+                e.preventDefault();
+                $('button[type="submit"]').click();
+            }
 
-        // select the first asin
-        $('div[data-index=1]').attr('data-selected', 'true');
+            function _scrollToEle (el) {
+                var container = $('#asins-section');
+                var elTop = el.parent().position().top;
+                var scrollPos = container.scrollTop();
+                var winHeight = container.height();
+                if(elTop < scrollPos){
+                    container.scrollTop(elTop - 50);
+                } else if((elTop + el.height()) > scrollPos ){
+                    container.scrollTop(elTop);
+                }
+            }
 
-        // detect completed asins
-        function computeCompletedAsins() {
-            asinsCompleted = 0;
-            $('div.thumbnail').each(function () {
-                var ele = $(this);
-                var asin = ele.data('asin');
-                var checkedCount = ele.find('input:checked').length;
-                if (checkedCount > 0) {
-                    asinsCompleted = asinsCompleted + 1;
+            // returns the 1-indexed currently selected task, or index 1 if there's no selection
+            function getSelectedItemIndex(){
+                var selectedTask = $('div[data-selected]');
+                return selectedTask.length > 0 ? parseInt(selectedTask.data('index'), 10) : 1;
+            }
+
+            function selectItemByIndex(index){
+                $('div[data-selected]').removeAttr('data-selected'); // deselect the old task
+
+                // figure out which element to select
+                index = (index - 1) % totalAsins; // convert to zero-indexed
+                if(index < 0) index += totalAsins;
+                index += 1; // convert back to one-indexed
+
+                // select the new task
+                var newSelection = $('div[data-index=' + index + ']');
+                newSelection.attr('data-selected', 'true');
+                _scrollToEle(newSelection);
+            }
+
+            function handleSpace(){
+                var target = $('div[data-selected] h4 a').attr('href');
+                window.open(target, '_blank');
+            }
+
+            function handleTabKey(moveBackward){
+                var newIndex = getSelectedItemIndex() + (moveBackward ? -1 : 1);
+                selectItemByIndex(newIndex);
+            }
+
+            function handleMovementY(moveBackward){
+                var index = getSelectedItemIndex() - 1; // zero-indexed task
+
+                // compute the number of columns being displayed
+                var columnCount = 0;
+                var items = $('div.asin-block');
+                var firstTopOffset = items.first().offset().top;
+                items.each(function(i, element) {
+                    var topOffset = $(element).offset().top;
+                    if(topOffset === firstTopOffset) columnCount ++;
+                });
+
+                // number of items, rounded up to nearest full row
+                var fullSelectableCount = totalAsins + columnCount - (totalAsins % columnCount);
+
+                // new index of the item after applying the movement, if we assumed that all the rows are filled with items
+                var newIndex = (index + (moveBackward ? -columnCount : columnCount) + fullSelectableCount) % fullSelectableCount;
+
+                // correct the index if the last row is not filled with items
+                if(newIndex >= totalAsins) {
+                    if(moveBackward){ // moving up when on the first row and there's no corresponding item in the last row, move to the second to last row
+                        newIndex -= columnCount;
+                    } else { // moving down when there's no corresponding item below, move to the first row
+                        newIndex = newIndex % columnCount;
+                    }
+                }
+
+                selectItemByIndex(newIndex + 1);
+            }
+
+            function handleOtherKeys(e){
+                e.preventDefault();
+                var key = allowedKeys[e.which]
+                handleLabelChange(key);
+            }
+
+            function handleLabelChange(key){
+                // don't handle label change if form has already been submitted
+                if(key != null && !alreadySaving){
+                    var check = $('div.thumbnail[data-selected] input[data-shortcut-key=' + key + ']');
+                    check.prop('checked', !check.prop('checked'));
+                    var form_type = "one_of_many";
+                    if(form_type != 'many_of_many'){
+                        var checks = $('div.thumbnail[data-selected] input[type=checkbox]').filter(function(){
+                            return $(this).attr('data-shortcut-key') != key;
+                        });
+                        checks.prop('checked', false);
+                    }
+                    updateCheckLabels(check);
+                    updateProgress(check);
+
+                    // move to the next item after the judgement is made
+                    handleTabKey(false);
+                }
+            }
+
+            $(document).keydown(function(e){
+                if(!alreadySaving && (e.ctrlKey || e.metaKey) && e.which === 83){
+                    if(asinsCompleted === totalAsins) {
+                        handlePageSave(e);
+                        alreadySaving = true;
+                    }
+                    else {
+                        e.preventDefault();
+                    }
+                } else if(e.which !== 9 && e.target.tagName.toLowerCase() === 'textarea'){
+                    return true;
+                }
+
+                if(e.which === 32){ // space key
+                    handleSpace();
+                }else if(e.which === 37){ // left arrow key
+                    handleTabKey(true);
+                }else if(e.which === 39){ // right arrow key
+                    handleTabKey(false);
+                }else if(e.which === 38){ // up arrow key
+                    handleMovementY(true);
+                }else if(e.which === 40){ // down arrow key
+                    handleMovementY(false);
+                }else if(e.which === 9){ // tab key
+                    e.preventDefault();
+                    handleTabKey(e.shiftKey);
+                    return false;
+                }else if(allowedKeys[e.which] != null){ // alphabet key
+                    handleOtherKeys(e);
+                }else{
+                    return true; // ignore all other keys
                 }
             });
-        }
 
-        $('div.thumbnail').click(function (e) {
-            if (e.target.tagName.toLowerCase() != 'a') {
-                $('div[data-selected]').removeAttr('data-selected');
-                $(this).attr('data-selected', 'true');
+            function updateCheckLabels(checkbox){
+                var checks = checkbox.closest('div.thumbnail').find('input[type=checkbox]');
+                var container = checkbox.closest('div.thumbnail').find('div.labels ul');
+                container.html('');
+                var content = [];
+                checks.each(function(){
+                    if(this.checked){
+                        if(auditMode){
+                            content.push('<li>');
+                            content.push('<span class="label label-info">' + $(this).parent().text() + '</span>');
+                            if ($(this).data('user-list') != null){
+                                var userList = $(this).data('user-list').split(',');
+                                for(var i = 0, len = userList.length; i < len; i++){
+                                    content.push('&nbsp;<span class="label label-primary">' + userList[i] + '</span>');
+                                }
+                            }
+                            content.push('</li>');
+                        } else {
+                            content.push('<li><span class="label label-info">' + $(this).parent().text() + '</span></li>');
+                        }
+                    }
+                });
+                container.html(content.join(''));
             }
+
+            function updateProgress(checkbox){
+                computeCompletedAsins();
+                updateProgressUI();
+                updateSubmitState();
+            }
+
+            $('div.thumbnail input[type=checkbox]').on('change', function(e){
+                updateCheckLabels($(this));
+            });
+
+            $('a[data-action=select-field]').click(function(e){
+                e.preventDefault();
+                var key = $(this).data('field-shortcut');
+                handleLabelChange(key);
+            });
+
+            // select the first asin
+            $('div[data-index=1]').attr('data-selected', 'true');
+
+            // detect completed asins
+            function computeCompletedAsins(){
+                asinsCompleted = 0;
+                $('div.thumbnail').each(function(){
+                    var ele = $(this);
+                    var asin = ele.data('asin');
+                    var checkedCount = ele.find('input:checked').length;
+                    if(checkedCount > 0){
+                        asinsCompleted = asinsCompleted + 1;
+                    }
+                });
+            }
+
+            $('div.thumbnail').click(function(e){
+                if(e.target.tagName.toLowerCase() != 'a'){
+                    $('div[data-selected]').removeAttr('data-selected');
+                    $(this).attr('data-selected', 'true');
+                }
+            });
+
+            function updateProgressUI(){
+                $('div.progress-bar').css('width', ((asinsCompleted / totalAsins) * 100) + '%');
+                $('#completionNumbers').html(asinsCompleted + "/" + totalAsins + " Complete");
+                $('#completionPercent').html(Math.floor((asinsCompleted / totalAsins) * 100) + '%');
+            }
+
+            function updateSubmitState() {
+                var taskCompleted = totalAsins !== asinsCompleted;
+                $('button[type=submit]').prop('disabled', taskCompleted);
+            }
+
+            updateProgress();
         });
-
-        function updateProgressUI() {
-            $('div.progress-bar').css('width', ((asinsCompleted / totalAsins) * 100) + '%');
-            $('#completionNumbers').html(asinsCompleted + "/" + totalAsins + " Complete");
-            $('#completionPercent').html(Math.floor((asinsCompleted / totalAsins) * 100) + '%');
-        }
-
-        function updateSubmitState() {
-            var taskCompleted = totalAsins !== asinsCompleted;
-            $('button[type=submit]').prop('disabled', taskCompleted);
-        }
-
-        updateProgress();
     </script>
     <style>
 
