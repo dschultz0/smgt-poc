@@ -44,18 +44,17 @@
         <div id="search-info-row" class="row">
             <div class="col-md-8">
                 <h3 class="pull-left" style="margin:0px;padding-top:2px;">
-                    {{ task.input.query.query_string }}
+                    guess jacket men
                     <span style="display:block;font-size:14px">
-				<i>(search-alias: {{ task.input.query.search_alias }})</i>
+				<i>(search-alias: aps)</i>
 			</span>
                 </h3>
-                <a href="{{task.input.query.search_page_url}}"
-                   target="_blank" class="pull-left search-info-item">{{task.input.query.marketplace}}: {{
-                    task.input.query.search_alias }}</a>
-                <a href="{{task.input.query.search_on_google_url}}%20site:{{task.input.query.marketplace}}"
+                <a href="https://www.amazon.com/s?k=guess+jacket+men"
+                   target="_blank" class="pull-left search-info-item">amazon.com: aps</a>
+                <a href="https://www.google.com/search?q=guess+jacket+men%20site:amazon.com"
                    target="_blank"
                    class="pull-left search-info-item">Google site:Amazon</a>
-                <a href="{{task.input.query.search_on_google_url}}" target="_blank"
+                <a href="https://www.google.com/search?q=guess+jacket+men" target="_blank"
                    class="pull-left search-info-item">Google</a>
             </div>
             <div class="col-md-4">
@@ -77,42 +76,42 @@
             <div class="col-md-8">
                 <input type="hidden" name="_method" value="PUT">
                 <div id="asins-section" class="row">
-                    {% for asin in task.input.asins %}
+                    
                     <div class="col-sm-6 col-md-4">
-                        <div id="asin-block" class="thumbnail asin-block" data-index="{{ forloop.index }}" data-asin="{{ asin.asin }}"
-                             {% if forloop.first == true %}data-selected="true"{% endif %}>
-                            <img src="{{ asin.image }}" width="175" height="200">
+                        <div id="asin-block" class="thumbnail asin-block" data-index="1" data-asin="B07SX5RM12"
+                             data-selected="true">
+                            <img src="https://m.media-amazon.com/images/I/71P8X7JIc-L._AC_UY879_.jpg" width="175" height="200">
                             <div class="caption">
                                 <h4 style="margin-bottom:5px;">
-                                    <a href="{{ asin.detail_page_url }}"
-                                       target="_blank" title="{{ asin.title }}">
-                                        {{ asin.title }}
+                                    <a href="https://www.amazon.com/dp/B07SX5RM12"
+                                       target="_blank" title="GUESS Men&#39;s Wind &amp; Water Resistant Hooded Puffer Jacket with Side Stretch Panels, Light Grey, XX-Lar">
+                                        GUESS Men&#39;s Wind &amp; Water Resistant Hooded Puffer Jacket with Side Stretch Panels, Light Grey, XX-Lar
                                     </a>
                                 </h4>
 
                                 <div class="hidden">
                                     <label>
-                                        <input type="checkbox" name="exact[]" value="{{ asin.asin }}"
+                                        <input type="checkbox" name="exact[]" value="B07SX5RM12"
                                                data-shortcut-key="e">
                                         Exact
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="substitute[]" value="{{ asin.asin }}"
+                                        <input type="checkbox" name="substitute[]" value="B07SX5RM12"
                                                data-shortcut-key="s">
                                         Substitute
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="complement[]" value="{{ asin.asin }}"
+                                        <input type="checkbox" name="complement[]" value="B07SX5RM12"
                                                data-shortcut-key="c">
                                         Complement
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="irrelevant[]" value="{{ asin.asin }}"
+                                        <input type="checkbox" name="irrelevant[]" value="B07SX5RM12"
                                                data-shortcut-key="i">
                                         Irrelevant
                                     </label>
                                     <label>
-                                        <input type="checkbox" name="other[]" value="{{ asin.asin }}"
+                                        <input type="checkbox" name="other[]" value="B07SX5RM12"
                                                data-shortcut-key="u">
                                         Unjudgable
                                     </label>
@@ -127,7 +126,107 @@
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
+                    
+                    <div class="col-sm-6 col-md-4">
+                        <div id="asin-block" class="thumbnail asin-block" data-index="2" data-asin="B07SW1D6HX"
+                             >
+                            <img src="https://m.media-amazon.com/images/I/411Sli+HdhL.jpg" width="175" height="200">
+                            <div class="caption">
+                                <h4 style="margin-bottom:5px;">
+                                    <a href="https://www.amazon.com/dp/B07SW1D6HX"
+                                       target="_blank" title="GUESS Men&#39;s Color Block Hooded Puffer Jacket, Navy, Medium">
+                                        GUESS Men&#39;s Color Block Hooded Puffer Jacket, Navy, Medium
+                                    </a>
+                                </h4>
+
+                                <div class="hidden">
+                                    <label>
+                                        <input type="checkbox" name="exact[]" value="B07SW1D6HX"
+                                               data-shortcut-key="e">
+                                        Exact
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="substitute[]" value="B07SW1D6HX"
+                                               data-shortcut-key="s">
+                                        Substitute
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="complement[]" value="B07SW1D6HX"
+                                               data-shortcut-key="c">
+                                        Complement
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="irrelevant[]" value="B07SW1D6HX"
+                                               data-shortcut-key="i">
+                                        Irrelevant
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="other[]" value="B07SW1D6HX"
+                                               data-shortcut-key="u">
+                                        Unjudgable
+                                    </label>
+                                </div>
+                                <!-- End checkboxes -->
+
+                                <div class="labels">
+                                    <ul class="list-unstyled">
+                                    </ul>
+                                </div>
+                                <!-- End labels -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-sm-6 col-md-4">
+                        <div id="asin-block" class="thumbnail asin-block" data-index="3" data-asin="B08KRNDL3P"
+                             >
+                            <img src="https://m.media-amazon.com/images/I/71JJtROtlBL._AC_UY679_.jpg" width="175" height="200">
+                            <div class="caption">
+                                <h4 style="margin-bottom:5px;">
+                                    <a href="https://www.amazon.com/dp/B08KRNDL3P"
+                                       target="_blank" title="GUESS Men&#39;s Arctic Puffer Jacket, Reflective Prism, X-Large">
+                                        GUESS Men&#39;s Arctic Puffer Jacket, Reflective Prism, X-Large
+                                    </a>
+                                </h4>
+
+                                <div class="hidden">
+                                    <label>
+                                        <input type="checkbox" name="exact[]" value="B08KRNDL3P"
+                                               data-shortcut-key="e">
+                                        Exact
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="substitute[]" value="B08KRNDL3P"
+                                               data-shortcut-key="s">
+                                        Substitute
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="complement[]" value="B08KRNDL3P"
+                                               data-shortcut-key="c">
+                                        Complement
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="irrelevant[]" value="B08KRNDL3P"
+                                               data-shortcut-key="i">
+                                        Irrelevant
+                                    </label>
+                                    <label>
+                                        <input type="checkbox" name="other[]" value="B08KRNDL3P"
+                                               data-shortcut-key="u">
+                                        Unjudgable
+                                    </label>
+                                </div>
+                                <!-- End checkboxes -->
+
+                                <div class="labels">
+                                    <ul class="list-unstyled">
+                                    </ul>
+                                </div>
+                                <!-- End labels -->
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
             <div class="col-md-4">
